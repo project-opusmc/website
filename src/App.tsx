@@ -1,8 +1,7 @@
-import {useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode} from 'react';
+import {useEffect, useMemo, useState, type FormEvent, type ReactNode} from 'react';
 import {ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronRight, Download, ExternalLink, Heart, LockKeyhole, LogOut, Menu, Minus, Monitor, Search, ShoppingBag, SlidersHorizontal, UserRound, X} from 'lucide-react';
 import {journal, features, products, type StoreProduct} from './data';
 import './styles.css';
-import './approved-web.css';
 
 type Route = '/' | '/download' | '/features' | '/store' | '/premium' | '/journal' | '/account';
 type Member = {id: number; username: string; email: string; plan: string; createdAt: string};
@@ -106,84 +105,70 @@ function SiteFooter({go,openWaitlist}: {go:(path:string)=>void;openWaitlist:(int
 }
 
 
-function SceneVideo({src,poster,type='video/mp4'}:{src:string;poster:string;type?:string}){
-  const ref=useRef<HTMLVideoElement>(null);
-  useEffect(()=>{
-    const video=ref.current;
-    if(!video)return;
-    const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
-    let visible=true;
-    const sync=()=>{
-      if(visible&&!document.hidden&&!motion.matches)void video.play().catch(()=>undefined);
-      else video.pause();
-    };
-    const observer=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??false;sync();},{threshold:.12});
-    observer.observe(video);
-    document.addEventListener('visibilitychange',sync);
-    motion.addEventListener('change',sync);
-    sync();
-    return ()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync);motion.removeEventListener('change',sync);video.pause();};
-  },[]);
-  return <video ref={ref} className="scene-video" muted loop playsInline preload="metadata" poster={poster} aria-hidden="true"><source src={src} type={type}/></video>;
-}
-
 function Hero({go}:{go:(path:string)=>void}){
-  return <section className="hero hero-current" aria-label="Introduction to Opus Client">
-    <SceneVideo src="/media/launcher-miyabi.mp4" poster="/media/launcher-miyabi-poster.jpg"/>
-    <span className="hero-curtain" aria-hidden="true"/>
-    <span className="hero-current-content">
-      <span className="hero-current-top"><span>OPUS CLIENT <span className="hero-separator">/</span> AN INDEPENDENT MINECRAFT CLIENT</span><span className="hero-current-index">01 / INTRODUCING OPUS</span></span>
-      <span className="hero-current-center">
-        <span className="hero-current-kicker"><span className="status-pip"/> CURRENTLY IN DEVELOPMENT</span>
-        <h1>Opus<br/><em>Client.</em></h1>
-        <p className="hero-current-signature">THE EIDOS OF APEIRON.</p>
-        <p className="hero-current-description">One connected experience, from launcher to game. Made for Minecraft. Built around the way you play.</p>
-        <span className="hero-current-buttons"><LinkTo href="/features" go={go} className="hero-main-action">Discover Opus <ArrowUpRight size={18}/></LinkTo><LinkTo href="/journal" go={go} className="hero-secondary-action">Read the journal <ArrowUpRight size={16}/></LinkTo></span>
-      </span>
-      <span className="hero-current-bottom"><span>OPUS / A DIFFERENT KIND OF CLIENT</span><span>SCROLL TO EXPLORE <ArrowDown size={14}/></span></span>
-    </span>
-    <LinkTo href="/download" go={go} className="hero-notch"><span className="notch-icon"><Download size={23}/></span><span><b>Get Opus Client</b><small>Launcher &amp; downloads</small></span><ArrowUpRight className="notch-arrow" size={18}/></LinkTo>
+  return <section className="hero" aria-label="Opus Client introduction">
+    <div className="hero-message">
+      <div className="hero-prefix"><span>01 / THE OPUS EXPERIENCE</span><span className="hero-rule"/><span>AN INDEPENDENT MINECRAFT CLIENT</span></div>
+      <div className="hero-headline"><span className="hero-above">GOOD GAMES DESERVE</span><h1>BETTER<br/><i>WAYS TO</i><br/>PLAY<span>.</span></h1><p>The Minecraft client that makes room for what matters. Your game. Your settings. Your experience.</p></div>
+      <div className="hero-actions"><LinkTo href="/download" go={go} className="action-dark">Explore downloads <ArrowUpRight size={18}/></LinkTo><LinkTo href="/features" go={go} className="text-link">Discover Opus <ArrowRight size={18}/></LinkTo></div>
+      <div className="hero-meta"><span>OPUS CLIENT</span><span>MADE FOR YOUR WORLD.</span></div>
+    </div>
+    <div className="hero-art" aria-hidden="true">
+      <div className="art-topline"><span>O. / 001</span><span>AN OPEN WORLD, IN YOUR HANDS.</span></div>
+      <div className="aperture">
+        <div className="aperture-outer"><div className="aperture-void"/></div>
+        <div className="aperture-cut aperture-cut-one"/>
+        <div className="aperture-cut aperture-cut-two"/>
+        <div className="aperture-vertical">OPUS — PRODUCT STUDY NO. 01</div>
+      </div>
+      <div className="art-bottomline"><span>FORM FOLLOWS FUNCTION</span><span>EST. FOR THE NEXT SESSION</span></div>
+      <div className="art-notch"><span>01 / 03</span><span className="art-notch-rule"/><span>DESIGN IN MOTION</span></div>
+    </div>
   </section>;
 }
 
 function Home({go,openWaitlist}:{go:(path:string)=>void;openWaitlist:(interest:string)=>void}){
+  const [view,setView]=useState<'launcher'|'client'>('launcher');
   return <>
     <Hero go={go}/>
-    <section className="home-intro content-width">
-      <span className="section-ordinal"><span>01</span><span>WHAT IS OPUS?</span></span>
-      <span className="home-intro-core"><h2>The interface belongs<br/>to <em>the experience.</em></h2><p>Opus Client brings its own launcher, in-game interface and everyday tools together. Every control has a place. Every transition has a purpose.</p></span>
-      <LinkTo href="/features" go={go} className="inline-link">Explore the features <ArrowUpRight size={16}/></LinkTo>
+    <section className="manifesto-stripe content-width"><span>NO EXCESS.</span><span>NO DISTRACTIONS.</span><span>JUST YOUR GAME.</span><span className="manifesto-symbol">✳</span></section>
+    <section className="statement-section content-width">
+      <div className="section-index"><span>01</span><span>PHILOSOPHY</span></div>
+      <div className="statement-main"><span className="micro-label">LESS, BUT BETTER.</span><h2>THE FEELING<br/>OF BEING <em>IN CONTROL.</em></h2></div>
+      <div className="statement-side"><p>Opus is built around a simple thought: the things between you and the game should feel as considered as the game itself.</p><LinkTo href="/features" go={go} className="text-link">The features <ArrowUpRight size={17}/></LinkTo></div>
     </section>
-    <section className="product-panels content-width" aria-label="Client and launcher preview">
-      <article className="product-panel">
-        <span className="product-panel-media product-panel-media-launcher"><img src="/previews/launcher-home.png" alt="Opus Launcher current approved design, captured from the active React interface" loading="lazy"/><span className="media-corner-label">FIG. 01 <span>/</span> LAUNCHER</span></span>
-        <span className="product-panel-copy"><span className="eyebrow">THE DESKTOP LAUNCHER</span><h3>Before you play.</h3><p>Accounts, installation, settings and your next launch. A dedicated space for everything before Minecraft opens.</p><LinkTo href="/download" go={go} className="inline-link">About the launcher <ArrowUpRight size={16}/></LinkTo></span>
-      </article>
-      <article className="product-panel">
-        <span className="product-panel-media product-panel-media-client"><img src="/previews/client-home.png" alt="Current approved Opus Client main menu, captured directly from the active React interface" loading="lazy"/><span className="media-corner-label">FIG. 02 <span>/</span> CLIENT</span></span>
-        <span className="product-panel-copy"><span className="eyebrow">THE IN-GAME EXPERIENCE</span><h3>Once you're there.</h3><p>A game-facing interface for your worlds, servers, modules and controls. The experience stays consistent wherever you are.</p><LinkTo href="/features" go={go} className="inline-link">Client features <ArrowUpRight size={16}/></LinkTo></span>
-      </article>
-    </section>
-    <section className="home-feature-section content-width">
-      <span className="section-ordinal"><span>02</span><span>BUILT INTO THE CLIENT</span></span>
-      <span className="section-heading"><span className="eyebrow">UNDER YOUR CONTROL</span><h2>The tools you need.<br/><em>Nothing in the way.</em></h2><LinkTo href="/features" go={go} className="inline-link">View all features <ArrowUpRight size={16}/></LinkTo></span>
-      <div className="feature-editorial">
-        <span className="feature-editorial-media"><img src="/previews/client-control-center.png" alt="Approved Opus module and HUD interface captured from the current source" loading="lazy"/><span className="media-corner-label">FIG. 03 <span>/</span> MODULE SETTINGS</span></span>
-        <span className="feature-editorial-side"><span className="eyebrow">YOUR INTERFACE, YOUR RULES</span><h3>Fine-tuned for the everyday.</h3><p>HUD information, movement controls and configurable modules. Built directly into the Opus experience.</p><span className="feature-editorial-list"><span><b>01</b> Keystrokes &amp; FPS</span><span><b>02</b> Toggle Movement</span><span><b>03</b> Armor Status</span><span><b>04</b> Chat &amp; Lighting</span></span><LinkTo href="/features" go={go} className="inline-link">Explore modules <ArrowUpRight size={16}/></LinkTo></span>
+    <section className="product-story">
+      <div className="content-width product-story-inner">
+        <div className="story-heading"><div className="section-index"><span>02</span><span>INSIDE OPUS</span></div><h2>ONE CLIENT.<br/><em>TWO WORLDS.</em></h2><p>Everything before the game and everything inside it, designed to work together.</p></div>
+        <div className="story-switch" role="tablist" aria-label="Product preview"><button type="button" role="tab" aria-selected={view==='launcher'} className={view==='launcher'?'active':''} onClick={()=>setView('launcher')}><span>01</span> LAUNCHER</button><button type="button" role="tab" aria-selected={view==='client'} className={view==='client'?'active':''} onClick={()=>setView('client')}><span>02</span> IN-GAME</button></div>
+        <div className="story-stage">
+          <div className="story-shot"><img key={view} src={view==='launcher'?'/previews/launcher-home.png':'/previews/client-home.png'} alt={view==='launcher'?'Opus desktop launcher preview':'Opus Client main menu preview'}/></div>
+          <div className="story-detail"><span className="micro-label">{view==='launcher'?'DESKTOP / BEFORE THE GAME':'IN-GAME / WHERE IT COUNTS'}</span><h3>{view==='launcher'?'YOUR NEXT SESSION STARTS HERE.':'MAKE THE WORLD YOURS.'}</h3><p>{view==='launcher'?'Accounts, installation, settings and launch controls in a single desktop experience.':'Everyday tools, custom controls and a dedicated interface for what you do in-game.'}</p><LinkTo href={view==='launcher'?'/download':'/features'} go={go} className="text-link">{view==='launcher'?'Explore the launcher':'Explore features'} <ArrowUpRight size={17}/></LinkTo><span className="story-detail-id">{view==='launcher'?'FIGURE 01 / OPUS LAUNCHER':'FIGURE 02 / OPUS CLIENT'}</span></div>
+          <div className="story-corner" aria-hidden="true">O/</div>
+        </div>
+        <div className="story-caption"><span>AN ACTUAL LOOK AT THE PRODUCT</span><span>DESIGN PREVIEW — WORK IN PROGRESS</span></div>
       </div>
     </section>
-    <section className="home-philosophy content-width"><span className="section-ordinal"><span>03</span><span>DESIGN LANGUAGE</span></span><span className="home-philosophy-content"><span className="eyebrow">A COHERENT PRODUCT</span><h2>Designed to feel<br/><em>like Opus.</em></h2><p>Quiet materials. Precise joins. Deliberate motion. The launcher, client and website share one visual identity, without unnecessary glow or visual noise.</p></span><span className="philosophy-mark"><img src="/brand/opus.svg" alt=""/></span></section>
-    <section className="premium-home content-width">
-      <span className="premium-home-copy"><span className="eyebrow">04 / MEMBERSHIP</span><span className="edition-type">OPUS <i>PREMIUM</i></span><h2>Every detail,<br/>your own.</h2><p>Aether and Elysium are planned ways to take your Opus experience further. Explore the membership preview.</p><LinkTo href="/premium" go={go} className="button-light">Explore premium <ArrowUpRight size={17}/></LinkTo></span>
-      <span className="premium-home-symbol"><img src="/brand/opus.svg" alt=""/></span>
-      <span className="premium-home-footer"><span>AETHER / ELYSIUM</span><span>PLANNED MEMBERSHIP TIERS</span></span>
+    <section className="capabilities content-width">
+      <div className="capabilities-heading"><div className="section-index"><span>03</span><span>BUILT INTO OPUS</span></div><h2>THE DETAILS<br/>MAKE THE <em>DIFFERENCE.</em></h2><LinkTo href="/features" go={go} className="text-link">View all features <ArrowUpRight size={17}/></LinkTo></div>
+      <div className="capability-list">
+        {[
+          {id:'01',name:'Your interface',description:'Readable HUDs, keystrokes and information that belongs exactly where you want it.',to:'/features'},
+          {id:'02',name:'Your movement',description:'Configure everyday controls and shortcuts around your own playstyle.',to:'/features'},
+          {id:'03',name:'Your environment',description:'A considered launcher, chat tools and settings for a more connected experience.',to:'/features'},
+        ].map(item=><LinkTo key={item.id} href={item.to} go={go} className="capability-row"><span className="capability-index">{item.id}</span><span className="capability-name">{item.name}</span><span className="capability-desc">{item.description}</span><ArrowUpRight size={22}/></LinkTo>)}
+      </div>
     </section>
-    <section className="journal-preview content-width">
-      <span className="section-ordinal"><span>05</span><span>FROM THE STUDIO</span></span>
-      <span className="section-heading"><span className="eyebrow">THE OPUS JOURNAL</span><h2>Notes from<br/>the inside.</h2><LinkTo href="/journal" go={go} className="inline-link">All entries <ArrowUpRight size={16}/></LinkTo></span>
-      <span className="journal-preview-grid">{journal.map((entry,index)=><LinkTo key={entry.slug} href={'/journal/'+entry.slug} go={go} className="journal-preview-card"><span className={'journal-art journal-art-'+index}><img src={index===0?'/media/client-tsundere-poster.jpg':index===1?'/previews/launcher-home.png':'/previews/client-control-center.png'} alt="" loading="lazy"/></span><span className="journal-meta">{entry.eyebrow}<span>{entry.readingTime}</span></span><h3>{entry.title}</h3><p>{entry.excerpt}</p><ArrowUpRight size={18}/></LinkTo>)}</span>
+    <section className="edition-section content-width">
+      <div className="edition-top"><span className="micro-label">04 / OPUS MEMBERSHIP</span><span>EXPLORE WHAT'S NEXT</span></div>
+      <div className="edition-body"><div><h2>A LITTLE<br/><em>MORE OPUS.</em></h2><p>Opus Free is only the beginning. Aether and Elysium are our planned editions for people who want more from their experience.</p><LinkTo href="/premium" go={go} className="action-light">See membership <ArrowUpRight size={18}/></LinkTo></div><div className="edition-typography" aria-hidden="true"><span>AETHER</span><span>ELYSIUM</span><span>OPUS / EDITIONS 002—003</span></div></div>
+      <div className="edition-bottom"><span>SUBSCRIPTIONS ARE NOT YET AVAILABLE</span><span>EXPLORE THE PLANS <ArrowUpRight size={16}/></span></div>
     </section>
-    <section className="final-cta content-width"><span><span className="eyebrow">START WITH OPUS</span><h2>Everything starts<br/>with a click.</h2></span><span className="final-actions"><LinkTo href="/download" go={go} className="button-light">Explore downloads <ArrowUpRight size={17}/></LinkTo><button onClick={()=>openWaitlist('Product updates')} className="underlined-action">Get updates <ArrowUpRight size={16}/></button></span></section>
+    <section className="journal-section content-width">
+      <div className="journal-section-head"><div><div className="section-index"><span>05</span><span>THE JOURNAL</span></div><h2>THOUGHTS<br/>IN PROGRESS.</h2></div><LinkTo href="/journal" go={go} className="text-link">All articles <ArrowUpRight size={17}/></LinkTo></div>
+      <div className="journal-rows">{journal.map((entry,index)=><LinkTo href={'/journal/'+entry.slug} go={go} className="journal-row" key={entry.slug}><span>{String(index+1).padStart(2,'0')}</span><span><small>{entry.eyebrow}</small><strong>{entry.title}</strong></span><span className="journal-row-detail">{entry.excerpt}</span><ArrowUpRight size={20}/></LinkTo>)}</div>
+    </section>
+    <section className="closing-section content-width"><div><span className="micro-label">MADE FOR THE GAME YOU LOVE</span><h2>READY FOR<br/>WHAT'S <em>NEXT?</em></h2></div><div><p>Be among the first to hear about the next release and what we're building.</p><button className="action-dark" onClick={()=>openWaitlist('Product updates')}>Get product updates <ArrowUpRight size={18}/></button></div></section>
   </>;
 }
 
@@ -219,7 +204,7 @@ function Features({go}: {go:(path:string)=>void}) {
 }
 
 function ProductIllustration({product}: {product:StoreProduct}) {
-  return <span className={'product-image '+product.visual}><span className="product-frame"><span className="product-frame-top">OPUS / {product.collection.toUpperCase()}</span><img src="/brand/opus.svg" alt=""/><span className="product-frame-bottom">{product.edition.toUpperCase()}</span></span></span>;
+  return <span className={'product-image '+product.visual}><span className="product-frame"><span className="product-frame-top">OPUS / {product.collection.toUpperCase()}</span><span className={'product-object '+(product.category==='Cloaks'?'product-cloak':product.category==='Accessories'?'product-emblem':'product-interface')}><span/></span><span className="product-frame-bottom">{product.edition.toUpperCase()}</span></span></span>;
 }
 
 function Store({openWaitlist,cart,addCart,removeCart,openCart}: {openWaitlist:(interest:string)=>void;cart:string[];addCart:(id:string)=>void;removeCart:(id:string)=>void;openCart:()=>void}) {
@@ -236,7 +221,7 @@ function Store({openWaitlist,cart,addCart,removeCart,openCart}: {openWaitlist:(i
   return <section className="page-shell content-width store-page">
     <PageIntro index="04" kicker="OPUS STORE" title="The collection." description="An exploration of identity beyond the interface. Early concepts from the Opus Store."/>
     <span className="store-disclosure"><span>STORE PREVIEW / NOT AVAILABLE FOR PURCHASE</span><span>PRODUCT DESIGNS, PRICES AND AVAILABILITY ARE SUBJECT TO CHANGE.</span></span>
-    <section className="store-banner"><span className="store-banner-copy"><span className="eyebrow">COLLECTION 001 / FOUNDATIONS</span><h2>Defined by<br/>the details.</h2><p>A collection of expressive, understated ideas for the world of Opus.</p><button type="button" className="button-light" onClick={()=>openWaitlist('Store opening')}>Store opening updates <ArrowUpRight size={16}/></button></span><img src="/media/launcher-miyabi-poster.jpg" alt="" /></section>
+    <section className="store-banner"><span className="store-banner-copy"><span className="eyebrow">COLLECTION 001 / FOUNDATIONS</span><h2>Defined by<br/>the details.</h2><p>A collection of expressive, understated ideas for the world of Opus.</p><button type="button" className="button-light" onClick={()=>openWaitlist('Store opening')}>Store opening updates <ArrowUpRight size={16}/></button></span><span className="store-banner-graphic" aria-hidden="true"><span>COLLECTION</span><b>001</b></span></section>
     <span className="catalog-heading"><span><span className="eyebrow">THE CATALOGUE</span><h2>Find your signature.</h2></span><span className="catalog-count">{filtered.length} CONCEPTS</span></span>
     <span className="store-controls"><span className="filter-row">{['All','Cloaks','Accessories','Interface'].map(name=><button type="button" key={name} className={'filter-chip'+(name===category?' active':'')} aria-pressed={name===category} onClick={()=>setCategory(name)}>{name}</button>)}</span><span className="store-tools"><label className="search-input"><Search size={17}/><input aria-label="Search collection" placeholder="Search collection" value={query} onChange={event=>setQuery(event.target.value)}/></label><label className="sort-select"><SlidersHorizontal size={16}/><select value={sort} aria-label="Sort products" onChange={event=>setSort(event.target.value)}><option>Featured</option><option>Name</option></select><ChevronDown size={14}/></label></span></span>
     <span className="product-grid">{filtered.map(product=><article className="product-card" key={product.id}><button className="product-click" type="button" onClick={()=>setView(product)} aria-label={'View '+product.name}><ProductIllustration product={product}/></button><span className="product-meta"><span>{product.category.toUpperCase()} / {product.edition.toUpperCase()}</span><button aria-label={saved.includes(product.id)?'Remove from saved':'Save product'} title="Save concept" className={'wish-button'+(saved.includes(product.id)?' liked':'')} onClick={()=>setSaved(previous=>previous.includes(product.id)?previous.filter(id=>id!==product.id):[...previous,product.id])}><Heart size={18} fill={saved.includes(product.id)?'currentColor':'none'}/></button></span><h3>{product.name}</h3><span className="product-bottom"><span>PRICING TO BE ANNOUNCED</span><button type="button" aria-label={'Add '+product.name+' to preview bag'} onClick={()=>{addCart(product.id);openCart();}}><ShoppingBag size={17}/></button></span></article>)}</span>
@@ -261,7 +246,7 @@ function Journal({go}: {go:(path:string)=>void}) {
     <PageIntro index="06" kicker="THE OPUS JOURNAL" title="From the inside." description="A closer look at the decisions, experiments and ideas behind Opus."/>
     <span className="journal-note"><span>EDITORIAL PREVIEWS</span><span>WORKING NOTES FROM THE PRODUCT / NOT OFFICIAL RELEASE ANNOUNCEMENTS</span></span>
     <span className="journal-topline"><span className="eyebrow">LATEST STORIES</span><label className="search-input"><Search size={17}/><input placeholder="Search articles" aria-label="Search articles" value={query} onChange={event=>setQuery(event.target.value)}/></label></span>
-    <span className="journal-list">{posts.map((item,index)=><LinkTo key={item.slug} href={'/journal/'+item.slug} go={go} className="journal-list-item"><span className="journal-list-num">{String(index+1).padStart(2,'0')}</span><span className={'journal-list-image journal-art-'+index}><img src={index===1?'/media/client-tsundere-poster.jpg':'/media/launcher-miyabi-poster.jpg'} alt="" loading="lazy"/></span><span className="journal-list-copy"><span className="eyebrow">{item.eyebrow}</span><h2>{item.title}</h2><p>{item.excerpt}</p><small>{item.readingTime}</small></span><ArrowUpRight size={22}/></LinkTo>)}</span>
+    <span className="journal-list">{posts.map((item,index)=><LinkTo key={item.slug} href={'/journal/'+item.slug} go={go} className="journal-list-item"><span className="journal-list-num">{String(index+1).padStart(2,'0')}</span><span className={'journal-list-image journal-art-'+index}><span className="journal-art-type"><b>O<span>.</span></b><small>STUDIO / {String(index+1).padStart(2,'0')}</small></span></span><span className="journal-list-copy"><span className="eyebrow">{item.eyebrow}</span><h2>{item.title}</h2><p>{item.excerpt}</p><small>{item.readingTime}</small></span><ArrowUpRight size={22}/></LinkTo>)}</span>
     {posts.length===0&&<span className="no-results"><h3>No articles matched your search.</h3><button className="inline-link" onClick={()=>setQuery('')}>Show all articles <ArrowRight size={15}/></button></span>}
   </section>;
 }
@@ -272,7 +257,7 @@ function Article({go,slug}: {go:(path:string)=>void;slug:string}) {
   return <article className="article-page content-width">
     <LinkTo href="/journal" go={go} className="article-back"><ArrowLeft size={17}/> All stories</LinkTo>
     <span className="article-header"><span className="eyebrow">{entry.eyebrow}</span><h1>{entry.title}</h1><span className="article-metadata"><span>{entry.readingTime}</span><span>OPUS EDITORIAL / DRAFT</span></span></span>
-    <span className="article-cover"><img src="/media/launcher-miyabi-poster.jpg" alt="" /></span>
+    <span className="article-cover"><span>OPUS<br/><i>STUDIO.</i></span><small>DESIGN / ENGINEERING / THOUGHT</small></span>
     <span className="article-content">{entry.body.map(paragraph=><p key={paragraph}>{paragraph}</p>)}<span className="article-end">— OPUS CLIENT</span></span>
     <span className="article-footer"><LinkTo href="/journal" go={go} className="inline-link">More from the journal <ArrowRight size={17}/></LinkTo><LinkTo href="/features" go={go} className="inline-link">Explore the client <ArrowUpRight size={17}/></LinkTo></span>
   </article>;
@@ -321,7 +306,7 @@ function Account({member,onAuthenticated,onLogout}: {member:Member|null;onAuthen
           <span className="auth-disclaimer"><LockKeyhole size={15}/> Opus account credentials are separate from your Microsoft / Minecraft credentials.</span>
         </>}
       </section>
-      <aside className="account-side"><img src="/media/client-tsundere-poster.jpg" alt="" /><span><span className="eyebrow">YOUR OWN SPACE</span><h2>Make it yours.</h2><p>An identity that stays with you across the Opus experience.</p></span></aside>
+      <aside className="account-side"><span className="account-side-mark" aria-hidden="true">O.</span><span><span className="eyebrow">YOUR OWN SPACE</span><h2>Make it yours.</h2><p>An identity that stays with you across the Opus experience.</p></span></aside>
     </span>
   </section>;
 }
@@ -333,7 +318,7 @@ function CartDrawer({items,remove,close,openWaitlist}: {items:string[];remove:(i
     document.addEventListener('keydown',key);
     return ()=>document.removeEventListener('keydown',key);
   },[close]);
-  return <span className="drawer-screen" onMouseDown={close}><aside className="cart-drawer" role="dialog" aria-modal="true" aria-label="Preview bag" onMouseDown={event=>event.stopPropagation()}><span className="drawer-head"><span><span className="eyebrow">OPUS STORE</span><h2>Your preview bag <small>({selected.length})</small></h2></span><button className="dialog-close" type="button" onClick={close} aria-label="Close bag"><X size={20}/></button></span>{selected.length? <span className="cart-list">{selected.map(item=><span className="cart-entry" key={item.id}><span className={'cart-art '+item.visual}><img src="/brand/opus.svg" alt=""/></span><span><strong>{item.name}</strong><small>{item.category} / Preview concept</small><button type="button" onClick={()=>remove(item.id)}>Remove <Minus size={12}/></button></span></span>)}</span>:<span className="cart-empty"><ShoppingBag size={35}/><h3>Your bag is empty.</h3><p>Browse the collection and save a few ideas.</p><button className="inline-link" type="button" onClick={close}>Continue exploring <ArrowRight size={16}/></button></span>}<span className="drawer-bottom"><p>This is a preview bag. Products are concepts and no checkout or payment is available yet.</p><button type="button" className="button-light" onClick={()=>{close();openWaitlist('Store opening');}}>Notify me when the store opens <ArrowUpRight size={17}/></button></span></aside></span>;
+  return <span className="drawer-screen" onMouseDown={close}><aside className="cart-drawer" role="dialog" aria-modal="true" aria-label="Preview bag" onMouseDown={event=>event.stopPropagation()}><span className="drawer-head"><span><span className="eyebrow">OPUS STORE</span><h2>Your preview bag <small>({selected.length})</small></h2></span><button className="dialog-close" type="button" onClick={close} aria-label="Close bag"><X size={20}/></button></span>{selected.length? <span className="cart-list">{selected.map(item=><span className="cart-entry" key={item.id}><span className={'cart-art '+item.visual}><span className="cart-art-mark" aria-hidden="true">O</span></span><span><strong>{item.name}</strong><small>{item.category} / Preview concept</small><button type="button" onClick={()=>remove(item.id)}>Remove <Minus size={12}/></button></span></span>)}</span>:<span className="cart-empty"><ShoppingBag size={35}/><h3>Your bag is empty.</h3><p>Browse the collection and save a few ideas.</p><button className="inline-link" type="button" onClick={close}>Continue exploring <ArrowRight size={16}/></button></span>}<span className="drawer-bottom"><p>This is a preview bag. Products are concepts and no checkout or payment is available yet.</p><button type="button" className="button-light" onClick={()=>{close();openWaitlist('Store opening');}}>Notify me when the store opens <ArrowUpRight size={17}/></button></span></aside></span>;
 }
 
 function WaitlistDialog({close,interest}: {close:()=>void;interest:string}) {

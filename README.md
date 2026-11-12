@@ -1,6 +1,6 @@
 # Opus Client Website
 
-Website Git submodule of the Opus superproject. React 19, TypeScript, Vite, Astryx, and design assets reused from the existing launcher/client.
+Website Git submodule of the Opus superproject. React 19, TypeScript, Vite and Astryx. The website uses a standalone visual identity rather than reusing launcher/client layout.
 
 ## Routes
 
@@ -56,19 +56,19 @@ The production Node server serves the built SPA and API together. Replace the ex
 
 ## Design and AI agents
 
-Uses real Opus launcher/player imagery, video, concave surface masking and measured motion. No glow, fake performance figures or generated marketing imagery.
+Original site art direction, with real Opus screenshots only for product explanation. Motion and concave joins are conceptual inspiration, never copied screen layouts. No glow, fake performance figures or generated marketing imagery.
 
 Codex reads AGENTS.md. Antigravity reads GEMINI.md and the shared brand contract in AGENTS.md. ChatGPT via LocalMCP uses the same workspace. Astryx documentation can be queried with the installed CLI.
 
 ## Approved design sources
 
-The website is based on the active, uncommitted Approved UI from the main worktree, not historical Hub/TUI assets:
+The website design is intentionally independent. The current Approved UI is inspected only for product accuracy and real screenshots:
 
 - Client entry: `../ui-v2/src/main.tsx` → `ProductApp.tsx` → `src/approved/ClientSurface.tsx` and `IngameSurface.tsx`.
 - Launcher entry: `../launcher/desktop/src/main.tsx` → `App.tsx` → `src/ui/LauncherSurface.tsx` and `approved-launcher/` CSS.
-- Live media: `../launcher/desktop/public/launcher/launcher-miyabi-1080.mp4`; client poster: `../ui-v2/public/approved/client-tsundere-poster.jpg`.
+- Original website identity: warm paper, charcoal ink, editorial typography, original aperture geometry, measured kinetic motion and precise concave joins; no reused launcher hero media.
 - Current design previews: `public/previews/launcher-home.png`, `client-home.png`, `client-control-center.png` are captured by Playwright from the current React source, not month-old output files.
-- The website visual overrides are authored in `src/approved-web.css`: matched shell colors, non-glowing lilac accents, joined concave surfaces, responsive layouts and scene motion that pauses when hidden.
+- The website styling is authored directly in `src/styles.css`, not layered over an Approved launcher skin. Product UI screenshots remain only in product-preview sections.
 
 Regenerate UI screenshots from the current source without using the owner’s desktop GUI:
 

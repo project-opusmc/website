@@ -33,9 +33,14 @@ try{
 
   await page.goto(origin+'/',{waitUntil:'networkidle'});
   assert.equal(await page.locator('.hero').count(),1);
-  assert.ok((await page.locator('.hero h1').innerText()).includes('Opus'));
+  assert.ok((await page.locator('.hero h1').innerText()).includes('PLAY'));
   await page.screenshot({path:join(tmpdir(),'opus-website-home-desktop-viewport.png')});
   await page.screenshot({path:join(tmpdir(),'opus-website-home-desktop.png'),fullPage:true});
+  await page.getByRole('tab',{name:/IN-GAME/}).click();
+  assert.equal(await page.locator('.story-detail h3').innerText(),'MAKE THE WORLD YOURS.');
+  await page.getByRole('tab',{name:/LAUNCHER/}).click();
+  assert.equal(await page.locator('.story-detail h3').innerText(),'YOUR NEXT SESSION STARTS HERE.');
+
 
   await page.goto(origin+'/features',{waitUntil:'networkidle'});
   assert.equal(await page.locator('.feature-directory-item').count(),8);

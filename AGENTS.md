@@ -10,10 +10,10 @@
 
 ## Website brand direction
 
-- The design references ../launcher/desktop/src/ui/approved-launcher, especially opus-ambient-surface.css and opus-home-direction.css.
-- Use approved Opus brand artwork and existing launcher/client imagery, not generated concept art.
+- The website has its own original design language. The client and launcher supply only product terminology, functional context, and broad motion/geometry concepts. Do not copy their layout, skins, surfaces, images as decoration, or existing screen hierarchy.
+- Use the verified Opus mark for brand continuity. Approved client/launcher screenshots may appear only as clearly identified product previews, never as the visual design itself.
 - Visual direction: editorial, understated, precise. No glow, neon, floating glass cards, colorful shadows, background blobs, or generic AI landing-page motifs.
-- Preserve video-led art direction, restrained motion and CSS mask-based concave joins. Honor prefers-reduced-motion.
+- Use original editorial typography, warm paper/ink color, sparse architectural cuts and restrained geometric motion. Never reproduce the launcher hero video or the client composition. Honor prefers-reduced-motion.
 - Keep names Opus Client, Opus Free, Aether and Elysium.
 - Do not invent available downloads, prices, performance metrics, release dates, or successful checkouts.
 - Product catalogue and paid tiers remain previews until payment, licensing and inventory are ready.
@@ -83,6 +83,6 @@ RULES:
 ## Canonical approved UI — website
 
 - The current client entry renders `../ui-v2/src/approved/ClientSurface.tsx` and `IngameSurface.tsx` through `ProductApp.tsx`. The old `../ui-v2/src/hub/` folder is not the active design system.
-- The current launcher entry renders `../launcher/desktop/src/ui/LauncherSurface.tsx` and styles in `approved-launcher/`. Do not reuse screenshots from old `output/playwright` folders.
+- The current launcher entry renders `../launcher/desktop/src/ui/LauncherSurface.tsx`. Product screenshots are factual references only; do not copy the launcher art direction to the website.
 - Source screenshots are generated headlessly with `npm run capture:ui`. Do not use remote desktop automation or assume previously copied screenshots remain current.
-- Website design: `src/approved-web.css`, no glow, no generic AI visual pattern, preserve the real joined-surface geometry and available verified media.
+- Website design: `src/styles.css`. The standalone editorial identity deliberately differs from launcher and client UI. No glow, gradients as decoration, floating glass blocks, or generic AI visual patterns.
