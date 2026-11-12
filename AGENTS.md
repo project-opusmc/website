@@ -79,3 +79,10 @@ RULES:
 - Do not commit unrelated uncommitted files. Make commits and pushes only within the task's authorization.
 - If an agent/runtime insists on creating a new branch, stop and report the constraint instead of creating it.
 - Only a new explicit instruction from the project owner may override this policy.
+
+## Canonical approved UI — website
+
+- The current client entry renders `../ui-v2/src/approved/ClientSurface.tsx` and `IngameSurface.tsx` through `ProductApp.tsx`. The old `../ui-v2/src/hub/` folder is not the active design system.
+- The current launcher entry renders `../launcher/desktop/src/ui/LauncherSurface.tsx` and styles in `approved-launcher/`. Do not reuse screenshots from old `output/playwright` folders.
+- Source screenshots are generated headlessly with `npm run capture:ui`. Do not use remote desktop automation or assume previously copied screenshots remain current.
+- Website design: `src/approved-web.css`, no glow, no generic AI visual pattern, preserve the real joined-surface geometry and available verified media.

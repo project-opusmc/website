@@ -1,39 +1,90 @@
-# Opus Client Web
+# Opus Client Website
 
-Standalone Git submodule for the Opus Client website, using React 19, Vite, TypeScript, and Meta's Astryx design system.
+Website Git submodule of the Opus superproject. React 19, TypeScript, Vite, Astryx, and design assets reused from the existing launcher/client.
 
-## Setup
+## Routes
 
-Requires Node.js 22.13 or newer and npm.
+| Route | Page |
+| --- | --- |
+| / | Home, introduction, preview, news |
+| /download | OS selector and optional release links |
+| /features | Filterable client/launcher feature directory |
+| /store | Concept catalogue, search, wishlist, persistent preview bag |
+| /premium | Opus Free, Aether, Elysium comparisons |
+| /journal | Editorial entries with article routes |
+| /account | Registration, login, session and profile |
+
+## Development
+
+Requires Node.js 22.13+.
 
 ```bash
 cd ~/Projects/Opus/web
 npm install
-npm run astryx:init
-npm run typecheck
-npm run build
 npm run dev
 ```
 
-`npm run astryx:init` teaches coding agents the installed Astryx component catalog in `AGENTS.md` (and optionally other agent docs). All agents working in this folder must follow `AGENTS.md`.
-
-## Astryx CLI
+Local Vite runs at http://127.0.0.1:5173 and proxies /api to the Node API at 127.0.0.1:8787. The development command launches both.
 
 ```bash
+npm run typecheck
+npm run build
+npm run test:api
 npm run astryx:components
-npm run astryx:templates
-npm run astryx:tokens
-npm run astryx:manifest
-npx @astryxdesign/cli component Button
 ```
 
-## Agents
+## Releases and commerce
 
-- Codex reads `AGENTS.md` at the project root.
-- Antigravity uses `GEMINI.md` plus the shared `AGENTS.md`.
-- ChatGPT via LocalMCP can read the same file when operating on this directory.
+Published download URLs are configured through .env.local with VITE_DOWNLOAD_WINDOWS_URL, VITE_DOWNLOAD_MACOS_URL and VITE_DOWNLOAD_LINUX_URL. A blank URL does not create a fake download.
 
-## References
+Store items are explicitly marked as design concepts. Prices, checkout, entitlements, payment processing and premium activation are not live. The preview bag and wishlist are local browser preferences.
 
-- https://github.com/meta/astryx
-- https://astryx.atmeta.com
+## Accounts and waitlist
+
+The Node service in server/index.mjs stores accounts and waitlist entries in a local SQLite database at server/.data/opus.db (gitignored). Passwords are hashed using scrypt; sessions use HttpOnly SameSite cookies. The account flow is functional locally. Waitlist emails are stored but not dispatched.
+
+Public deployment requires TLS, persistent storage, configured outbound email and operational monitoring. Payment provider and subscription billing must be integrated separately before taking payments.
+
+## Production (Node host)
+
+```bash
+npm run build
+NODE_ENV=production OPUS_PUBLIC_ORIGIN=https://YOUR-VERIFIED-DOMAIN OPUS_API_HOST=127.0.0.1 npm start
+```
+
+The production Node server serves the built SPA and API together. Replace the example origin and configure TLS and durable storage.
+
+## Design and AI agents
+
+Uses real Opus launcher/player imagery, video, concave surface masking and measured motion. No glow, fake performance figures or generated marketing imagery.
+
+Codex reads AGENTS.md. Antigravity reads GEMINI.md and the shared brand contract in AGENTS.md. ChatGPT via LocalMCP uses the same workspace. Astryx documentation can be queried with the installed CLI.
+
+## Approved design sources
+
+The website is based on the active, uncommitted Approved UI from the main worktree, not historical Hub/TUI assets:
+
+- Client entry: `../ui-v2/src/main.tsx` → `ProductApp.tsx` → `src/approved/ClientSurface.tsx` and `IngameSurface.tsx`.
+- Launcher entry: `../launcher/desktop/src/main.tsx` → `App.tsx` → `src/ui/LauncherSurface.tsx` and `approved-launcher/` CSS.
+- Live media: `../launcher/desktop/public/launcher/launcher-miyabi-1080.mp4`; client poster: `../ui-v2/public/approved/client-tsundere-poster.jpg`.
+- Current design previews: `public/previews/launcher-home.png`, `client-home.png`, `client-control-center.png` are captured by Playwright from the current React source, not month-old output files.
+- The website visual overrides are authored in `src/approved-web.css`: matched shell colors, non-glowing lilac accents, joined concave surfaces, responsive layouts and scene motion that pauses when hidden.
+
+Regenerate UI screenshots from the current source without using the owner’s desktop GUI:
+
+```bash
+OPUS_CHROMIUM_PATH="$HOME/Library/Caches/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-mac-arm64/chrome-headless-shell" npm run capture:ui
+```
+
+Run automated browser and API tests:
+
+```bash
+npm run test:api
+OPUS_CHROMIUM_PATH="$HOME/Library/Caches/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-mac-arm64/chrome-headless-shell" npm run test:ui
+```
+
+Playwright requires a compatible headless Chromium installation; override `OPUS_CHROMIUM_PATH` if the executable differs. Do not launch, focus or control GUI applications on the owner’s Mac.
+
+## Git policy
+
+All Opus repositories use the single branch `main`. The repository-local default push refspec points exclusively to `refs/heads/main`. `AGENTS.md` defines the strict prohibition against creating auxiliary branches. Public `website` and `opus-optim` repos have GitHub Rulesets preventing branch creation; private repositories cannot use those rules with the present GitHub entitlement.

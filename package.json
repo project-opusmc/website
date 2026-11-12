@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "node scripts/dev.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
@@ -12,12 +12,18 @@
     "astryx:components": "astryx component --list",
     "astryx:templates": "astryx template --list",
     "astryx:tokens": "astryx docs tokens",
-    "astryx:manifest": "astryx manifest --json"
+    "astryx:manifest": "astryx manifest --json",
+    "dev:api": "node server/index.mjs",
+    "start": "node server/index.mjs",
+    "test:api": "node --test server/api.test.mjs",
+    "test:ui": "node scripts/ui.test.mjs",
+    "capture:ui": "node scripts/capture-source-ui.mjs"
   },
   "dependencies": {
     "@astryxdesign/core": "0.7.11",
     "@astryxdesign/theme-neutral": "0.7.11",
     "@stylexjs/stylex": "^0.19.1",
+    "lucide-react": "^1.72.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
@@ -27,10 +33,11 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.2.0",
+    "playwright": "^1.65.0",
     "typescript": "^6.0.3",
     "vite": "^8.1.3"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   }
 }
