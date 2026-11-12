@@ -8,6 +8,19 @@
 - Prefer clean, understated, professional UI with restrained styling and no gratuitous visual effects.
 - Do not add code comments unless the user explicitly requests comments.
 
+## Website brand direction
+
+- The design references ../launcher/desktop/src/ui/approved-launcher, especially opus-ambient-surface.css and opus-home-direction.css.
+- Use approved Opus brand artwork and existing launcher/client imagery, not generated concept art.
+- Visual direction: editorial, understated, precise. No glow, neon, floating glass cards, colorful shadows, background blobs, or generic AI landing-page motifs.
+- Preserve video-led art direction, restrained motion and CSS mask-based concave joins. Honor prefers-reduced-motion.
+- Keep names Opus Client, Opus Free, Aether and Elysium.
+- Do not invent available downloads, prices, performance metrics, release dates, or successful checkouts.
+- Product catalogue and paid tiers remain previews until payment, licensing and inventory are ready.
+- User registration uses the local Node SQLite API, not client-side authentication.
+- Custom semantic markup and project-owned CSS are intentionally used for art-directed sections. Use Astryx primitives for controls where appropriate, without replacing the approved art direction.
+- Do not add code comments unless explicitly requested.
+
 ## Astryx usage
 
 - Use `@astryxdesign/core` components and semantic tokens before creating custom equivalents.
@@ -56,3 +69,13 @@ RULES:
   docs authoring     build an integration package, and every field it holds
   upgrade --from <old version> --apply   run after a dependency bump
 <!-- ASTRYX:END -->
+
+## Git branching policy — owner requirement
+
+- The Opus superproject and all of its submodule repositories use a single working branch: `main`.
+- Never create a second named branch, including feature, fix, Codex, Antigravity, temporary, checkpoint, or worktree branches. Do not run `git checkout -b`, `git switch -c`, `git branch <name>`, or `git worktree add -b`.
+- Do not push any non-`main` branch or open a pull request that requires creating one.
+- Work directly in the existing `main` worktree. Do not checkout/switch branches, reset, stash, rebase, cherry-pick, or discard unrelated changes just to start a task.
+- Do not commit unrelated uncommitted files. Make commits and pushes only within the task's authorization.
+- If an agent/runtime insists on creating a new branch, stop and report the constraint instead of creating it.
+- Only a new explicit instruction from the project owner may override this policy.
